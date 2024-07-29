@@ -3,7 +3,6 @@ package com.proyect.authAndUserModule.infraestructure.adapters.primary;
 
 import com.proyect.authAndUserModule.domain.dtos.VerifyUserDto;
 import com.proyect.authAndUserModule.infraestructure.security.*;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
