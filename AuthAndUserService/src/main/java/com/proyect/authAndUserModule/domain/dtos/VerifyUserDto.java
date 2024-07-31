@@ -1,10 +1,10 @@
 package com.proyect.authAndUserModule.domain.dtos;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class VerifyUserDto {
     private String email;
     private String verificationCode;

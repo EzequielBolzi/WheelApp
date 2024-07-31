@@ -25,7 +25,7 @@ public class UserUseCaseImpl implements UserUseCase {
 
     @Override
     public Optional<User> updateUser(Long id, User user) {
-        return userRepositoryPort.updateUser(user);
+        return userRepositoryPort.updateUser(id,user);
     }
 
     @Override

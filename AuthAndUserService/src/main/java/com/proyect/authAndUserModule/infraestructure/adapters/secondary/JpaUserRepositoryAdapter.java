@@ -4,6 +4,8 @@ import com.proyect.authAndUserModule.domain.model.User;
 import com.proyect.authAndUserModule.domain.port.out.UserRepositoryPort;
 import com.proyect.authAndUserModule.infraestructure.entities.UserEntity;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -13,47 +15,67 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @Component
 public class JpaUserRepositoryAdapter implements UserRepositoryPort {
-
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    @Autowired
     private final JpaUserRepository jpaUserRepository;
 
     @Override
     public User save(User user) {
-        UserEntity userEntity = UserEntity.fromDomainModel(user);
+        UserEntity userEntity = UserMapper.fromDomainModel(user);
         UserEntity savedUserEntity = jpaUserRepository.save(userEntity);
-        return savedUserEntity.toDomainModel();
+        return UserMapper.toDomainModel(savedUserEntity);
     }
 
     @Override
     public Optional<User> findById(Long id) {
-        return jpaUserRepository.findById(id).map(UserEntity::toDomainModel);
+        return jpaUserRepository.findById(id).map(UserMapper::toDomainModel);
     }
 
     @Override
     public Optional<User> findByEmail(String email) {
-        return jpaUserRepository.findByEmail(email).map(UserEntity::toDomainModel);
+        return jpaUserRepository.findByEmail(email).map(UserMapper::toDomainModel);
     }
 
     @Override
     public Optional<User> findByUserName(String userName) {
-        return jpaUserRepository.findByUserName(userName).map(UserEntity::toDomainModel);
+        return jpaUserRepository.findByUserName(userName).map(UserMapper::toDomainModel);
     }
 
     @Override
     public List<User> findAll() {
         return jpaUserRepository.findAll().stream()
-                .map(UserEntity::toDomainModel)
+                .map(UserMapper::toDomainModel)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public Optional<User> updateUser(User user) {
-        if (jpaUserRepository.existsById(user.getId())) {
-            UserEntity userEntity = UserEntity.fromDomainModel(user);
-            UserEntity updateUserEntity = jpaUserRepository.save(userEntity);
-            return Optional.of(updateUserEntity.toDomainModel());
-        }
+    public Optional<User> updateUser(Long userId,User updateUser) {
+        return jpaUserRepository.findById(userId).map(user -> {
 
-        return Optional.empty();
+            if (updateUser.getFavoriteTeamId() != null) {
+                user.setFavoriteTeamId(updateUser.getFavoriteTeamId());
+            }
+            if (updateUser.getUserName() != null) {
+                user.setUserName(updateUser.getUserName());
+            }
+            if (updateUser.getEmail() != null) {
+                user.setEmail(updateUser.getEmail());
+            }
+            if (updateUser.getAge() != 0) {
+                user.setAge(updateUser.getAge());
+            }
+            if (updateUser.getPassword() != null) {
+                String encodedPassword = passwordEncoder.encode(updateUser.getPassword());
+                user.setPassword(encodedPassword);
+                user.setConfirmPassword(encodedPassword);
+            }
+            if (updateUser.getProfilePicture() != null) {
+                user.setProfilePicture(updateUser.getProfilePicture());
+            }
+
+            return UserMapper.toDomainModel(jpaUserRepository.save(user));
+        });
     }
 
     @Override

@@ -96,12 +96,5 @@ public class UserEntity implements UserDetails {
         return true;
     }
 
-    public static UserEntity fromDomainModel(User user) {
-        return new UserEntity(user.getId(), user.getFavoriteTeamId(), user.getUserName(), user.getEmail(), user.getAge(),
-                user.getPassword(), user.getConfirmPassword(), user.getRegisterDate(), user.getRole(), user.getProfilePicture(), user.getVerificationCode(),user.getVerificationCodeExpiresAt(),user.isEnabled());
-    }
 
-    public User toDomainModel() {
-        return new User(id, favoriteTeamId, userName, email, age, password,confirmPassword, registerDate, role, profilePicture,verificationCode,verificationCodeExpiresAt, verified);
-    }
 }
