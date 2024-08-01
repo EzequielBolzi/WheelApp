@@ -12,6 +12,7 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -137,54 +138,90 @@ public class DriverInfoMapper {
 
     public static DriverInfo fromJson(String jsonString) throws Exception {
         JsonNode root = objectMapper.readTree(jsonString);
-        DriverInfo driverInfo = new DriverInfo();
-        driverInfo.setDriverId(root.get("id").asLong());
-        driverInfo.setFullName(root.get("fullName").asText());
-        driverInfo.setDisplayName(root.get("displayName").asText());
-        driverInfo.setDateOfBirth(ZonedDateTime.parse(root.get("dateOfBirth").asText()));
-        driverInfo.setShortName(root.get("shortName").asText());
-        driverInfo.setHeadshot(root.get("headshot").asText());
 
-        // Mapping single vehicle from JSON
-        List<Vehicle> vehicles = new ArrayList<>();
+        DriverInfo driverInfo = new DriverInfo();
+        driverInfo.setDriverId(getLongSafely(root, "id"));
+        driverInfo.setFullName(getTextSafely(root, "fullName"));
+        driverInfo.setDisplayName(getTextSafely(root, "displayName"));
+        driverInfo.setDateOfBirth(getDateTimeSafely(root, "dateOfBirth"));
+        driverInfo.setShortName(getTextSafely(root, "shortName"));
+        driverInfo.setHeadshot(getTextSafely(root, "headshot"));
+
+        // Mapping vehicles from JSON
         JsonNode vehiclesNode = root.get("vehicles");
-        if (vehiclesNode.isArray()) {
+        if (vehiclesNode != null && vehiclesNode.isArray()) {
+            List<Vehicle> vehicles = new ArrayList<>();
             for (JsonNode vehicleNode : vehiclesNode) {
-                Vehicle vehicle = new Vehicle(
-                        vehicleNode.get("number").asText(),
-                        vehicleNode.get("manufacturer").asText(),
-                        vehicleNode.get("chassis").asText(),
-                        vehicleNode.get("engine").asText(),
-                        vehicleNode.get("tire").asText(),
-                        vehicleNode.get("team").asText(),
-                        driverInfo
-                );
+                Vehicle vehicle = new Vehicle();
+                vehicle.setManufacturer(getTextSafely(vehicleNode, "manufacturer"));
+                vehicle.setChassis(getTextSafely(vehicleNode, "chassis"));
+                vehicle.setEngine(getTextSafely(vehicleNode, "engine"));
+                vehicle.setTire(getTextSafely(vehicleNode, "tire"));
+                vehicle.setTeam(getTextSafely(vehicleNode, "team"));
                 vehicles.add(vehicle);
             }
+            driverInfo.setVehicles(vehicles);
         }
-        driverInfo.setVehicles(vehicles);
 
         // Mapping flag from JSON
         JsonNode flagNode = root.get("flag");
-        DriverInfo.Flag flag = new DriverInfo.Flag(
-                flagNode.get("href").asText(),
-                flagNode.get("alt").asText(),
-                List.of(flagNode.get("rel").get(0).asText()));
-        driverInfo.setFlag(flag);
+        if (flagNode != null && flagNode.isObject()) {
+            DriverInfo.Flag flag = new DriverInfo.Flag(
+                    getTextSafely(flagNode, "href"),
+                    getTextSafely(flagNode, "alt"),
+                    getListSafely(flagNode, "rel")
+            );
+            driverInfo.setFlag(flag);
+        }
 
-        driverInfo.setLinked(root.get("linked").asBoolean());
-        driverInfo.setActive(root.get("active").asBoolean());
+        driverInfo.setLinked(getBooleanSafely(root, "linked", false));
+        driverInfo.setActive(getBooleanSafely(root, "active", false));
 
         // Mapping status from JSON
         JsonNode statusNode = root.get("status");
-        DriverInfo.Status status = new DriverInfo.Status(
-                statusNode.get("id").asText(),
-                statusNode.get("name").asText(),
-                statusNode.get("type").asText(),
-                statusNode.get("abbreviation").asText());
-        driverInfo.setStatus(status);
+        if (statusNode != null && statusNode.isObject()) {
+            DriverInfo.Status status = new DriverInfo.Status(
+                    getTextSafely(statusNode, "id"),
+                    getTextSafely(statusNode, "name"),
+                    getTextSafely(statusNode, "type"),
+                    getTextSafely(statusNode, "abbreviation")
+            );
+            driverInfo.setStatus(status);
+        }
 
         return driverInfo;
+    }
+
+    private static String getTextSafely(JsonNode node, String fieldName) {
+        JsonNode fieldNode = node.get(fieldName);
+        return (fieldNode != null && !fieldNode.isNull()) ? fieldNode.asText() : null;
+    }
+
+    private static boolean getBooleanSafely(JsonNode node, String fieldName, boolean defaultValue) {
+        JsonNode fieldNode = node.get(fieldName);
+        return (fieldNode != null && !fieldNode.isNull()) ? fieldNode.asBoolean() : defaultValue;
+    }
+
+    private static long getLongSafely(JsonNode node, String fieldName) {
+        JsonNode fieldNode = node.get(fieldName);
+        return (fieldNode != null && !fieldNode.isNull()) ? fieldNode.asLong() : 0;
+    }
+
+    private static ZonedDateTime getDateTimeSafely(JsonNode node, String fieldName) {
+        String dateTimeString = getTextSafely(node, fieldName);
+        return dateTimeString != null ? ZonedDateTime.parse(dateTimeString) : null;
+    }
+
+    private static List<String> getListSafely(JsonNode node, String fieldName) {
+        JsonNode fieldNode = node.get(fieldName);
+        if (fieldNode != null && fieldNode.isArray()) {
+            List<String> result = new ArrayList<>();
+            for (JsonNode item : fieldNode) {
+                result.add(item.asText());
+            }
+            return result;
+        }
+        return Collections.emptyList();
     }
     /**
      * Calculates the age based on the date of birth.

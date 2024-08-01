@@ -95,10 +95,17 @@ public class DriverInfoAdapter {
 
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
+            if (response.statusCode() == 404) {
+                // Driver not found in external API
+                return Optional.empty();
+            } else if (response.statusCode() != 200) {
+                // Other API errors
+                throw new RuntimeException("API error: " + response.statusCode());
+            }
             DriverInfo driverInfo = DriverInfoMapper.fromJson(response.body());
             return Optional.of(driverInfo);
         } catch (Exception e) {
-            return Optional.empty();
+            throw new RuntimeException("Error fetching driver info: " + e.getMessage(), e);
         }
     }
 }

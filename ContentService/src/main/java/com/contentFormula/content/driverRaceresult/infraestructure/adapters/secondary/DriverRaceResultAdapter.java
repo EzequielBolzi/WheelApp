@@ -1,7 +1,6 @@
 package com.contentFormula.content.driverRaceresult.infraestructure.adapters.secondary;
 
 import com.contentFormula.content.driverRaceresult.domain.model.DriverRaceResult;
-import com.contentFormula.content.driverRaceresult.infraestructure.entities.DriverRaceResultEntity;
 import com.contentFormula.content.driverinfo.domain.model.DriverInfo;
 import com.contentFormula.content.driverinfo.infraestructure.adapters.secondary.DriverInfoMapper;
 import com.contentFormula.content.driverinfo.infraestructure.adapters.secondary.JpaDriverInfoRepository;
