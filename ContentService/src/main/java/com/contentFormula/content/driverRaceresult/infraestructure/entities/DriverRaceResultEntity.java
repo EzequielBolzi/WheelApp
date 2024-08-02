@@ -22,13 +22,13 @@ public class DriverRaceResultEntity {
     @Column(name = "race")
     private String race;
     @Column(name = "place")
-    private int place;
+    private Integer place;
     @Column(name = "start_position")
-    private int startPosition;
+    private Integer startPosition;
     @Column(name = "laps")
-    private int laps;
+    private Integer laps;
     @Column(name = "points")
-    private int points;
+    private Integer points;
 
     @ManyToOne()
     @JoinColumn(name = "driver_info_id")

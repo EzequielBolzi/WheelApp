@@ -15,10 +15,10 @@ public class DriverRaceResult {
     private Long id;
     private String date;
     private String race;
-    private int place;
-    private int startPosition;
-    private int laps;
-    private int points;
+    private Integer place;
+    private Integer startPosition;
+    private Integer laps;
+    private Integer points;
     private DriverInfo driverInfo;
 
 

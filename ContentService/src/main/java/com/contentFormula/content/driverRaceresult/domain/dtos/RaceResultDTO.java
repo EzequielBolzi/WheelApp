@@ -6,8 +6,8 @@ import lombok.Data;
 public class RaceResultDTO {
     private String date;
     private String race;
-    private int place;
-    private int start;
-    private int laps;
-    private int points;
+    private Integer place;
+    private Integer start;
+    private Integer laps;
+    private Integer points;
 }

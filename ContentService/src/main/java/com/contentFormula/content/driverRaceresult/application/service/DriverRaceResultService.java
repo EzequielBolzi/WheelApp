@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Optional;
 
 @AllArgsConstructor
-
 public class DriverRaceResultService implements DriverRaceResultUseCase {
 
     private final DriverRaceResultUseCase driverRaceResultUseCase;

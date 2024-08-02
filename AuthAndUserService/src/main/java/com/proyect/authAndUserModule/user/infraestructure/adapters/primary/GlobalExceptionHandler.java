@@ -1,9 +1,7 @@
 package com.proyect.authAndUserModule.user.infraestructure.adapters.primary;
 
-import com.proyect.authAndUserModule.user.infraestructure.customexceptions.CustomEmailAlreadyExistsException;
-import com.proyect.authAndUserModule.user.infraestructure.customexceptions.CustomInvalidEmailException;
-import com.proyect.authAndUserModule.user.infraestructure.customexceptions.CustomPasswordException;
-import com.proyect.authAndUserModule.user.infraestructure.customexceptions.CustomUserAlreadyExistsException;
+import com.proyect.authAndUserModule.user.infraestructure.customexceptions.*;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -26,5 +24,27 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleInvalidEmailException(CustomInvalidEmailException ex) {
         return ResponseEntity.badRequest().body(ex.getMessage());
     }
+    @ExceptionHandler(CustomVerifyAccountBeforeLogginException.class)
+    public ResponseEntity<String> handleVerifyAccountBeforeLogginException(CustomVerifyAccountBeforeLogginException ex) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ex.getMessage());
+    }
+    @ExceptionHandler(CustomAccountAlreadyVerifiedException.class)
+    public ResponseEntity<String> handleAccountAlreadyVerifiedException(CustomAccountAlreadyVerifiedException ex) {
+        return ResponseEntity.badRequest().body(ex.getMessage());
+    }
 
+    @ExceptionHandler(CustomVerificationCodeExpiredException.class)
+    public ResponseEntity<String> handleVerificationCodeExpiredException(CustomVerificationCodeExpiredException ex) {
+        return ResponseEntity.status(HttpStatus.GONE).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(CustomInvalidVerificationCodeException.class)
+    public ResponseEntity<String> handleInvalidVerificationCodeException(CustomInvalidVerificationCodeException ex) {
+        return ResponseEntity.badRequest().body(ex.getMessage());
+    }
+
+    @ExceptionHandler(CustomUserNotFoundException.class)
+    public ResponseEntity<String> handleUserNotFoundException(CustomUserNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    }
 }

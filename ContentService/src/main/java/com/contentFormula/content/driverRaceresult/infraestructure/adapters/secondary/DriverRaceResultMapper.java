@@ -4,7 +4,6 @@ import com.contentFormula.content.driverRaceresult.domain.dtos.RaceResultDTO;
 import com.contentFormula.content.driverRaceresult.domain.model.DriverRaceResult;
 import com.contentFormula.content.driverRaceresult.infraestructure.entities.DriverRaceResultEntity;
 
-import com.contentFormula.content.driverinfo.domain.dtos.DriverInfoDto;
 import com.contentFormula.content.driverinfo.domain.model.DriverInfo;
 import com.contentFormula.content.driverinfo.infraestructure.adapters.secondary.DriverInfoMapper;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -14,12 +13,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
 public class DriverRaceResultMapper {
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
     public static DriverRaceResult toDomain(DriverRaceResultEntity entity) {
         if (entity == null) return null;
+
+        DriverInfo driverInfo = driverInfoToDomain(entity.getDriverInfo());
 
         return new DriverRaceResult(
                 entity.getId(),
@@ -29,7 +29,7 @@ public class DriverRaceResultMapper {
                 entity.getStartPosition(),
                 entity.getLaps(),
                 entity.getPoints(),
-                DriverInfoMapper.toDomain(entity.getDriverInfo())
+                driverInfo
         );
     }
 
@@ -44,12 +44,11 @@ public class DriverRaceResultMapper {
         entity.setStartPosition(domain.getStartPosition());
         entity.setLaps(domain.getLaps());
         entity.setPoints(domain.getPoints());
-        entity.setDriverInfo(DriverInfoMapper.toEntity(domain.getDriverInfo()));
+        entity.setDriverInfo(driverInfoToEntity(domain.getDriverInfo()));
 
         return entity;
-
-
     }
+
     public static RaceResultDTO toDto(DriverRaceResult domain) {
         if (domain == null) return null;
 
@@ -62,6 +61,7 @@ public class DriverRaceResultMapper {
         dto.setPoints(domain.getPoints());
         return dto;
     }
+
     public static List<RaceResultDTO> toDto(List<DriverRaceResult> domains) {
         return domains.stream().map(DriverRaceResultMapper::toDto).collect(Collectors.toList());
     }
@@ -85,4 +85,15 @@ public class DriverRaceResultMapper {
 
         return results;
     }
+
+    private static DriverInfo driverInfoToDomain(com.contentFormula.content.driverinfo.infraestructure.entities.DriverInfoEntity entity) {
+        if (entity == null) return null;
+        return DriverInfoMapper.toDomain(entity);
     }
+
+    private static com.contentFormula.content.driverinfo.infraestructure.entities.DriverInfoEntity driverInfoToEntity(DriverInfo domain) {
+        if (domain == null) return null;
+        return DriverInfoMapper.toEntity(domain);
+    }
+
+}

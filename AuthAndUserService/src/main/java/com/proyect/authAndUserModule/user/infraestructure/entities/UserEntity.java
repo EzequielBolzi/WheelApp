@@ -65,11 +65,21 @@ public class UserEntity implements UserDetails {
         return List.of(new SimpleGrantedAuthority(role.name()));
     }
 
+    public boolean isVerified() {
+        return verified;
+    }
+
+    public void setVerified(boolean verified) {
+        this.verified = verified;
+    }
+
+    //User Name
     public String getUserName() {
         return userName;
     }
 
 
+    //EMAIL
     @Override
     public String getUsername() {
         return this.email;
@@ -90,9 +100,6 @@ public class UserEntity implements UserDetails {
         return true;
     }
 
-    public boolean isVerified() {
-        return false;
-    }
 
 
 }

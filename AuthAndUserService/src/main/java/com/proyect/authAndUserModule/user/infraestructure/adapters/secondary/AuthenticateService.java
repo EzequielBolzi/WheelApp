@@ -4,10 +4,7 @@ import com.proyect.authAndUserModule.user.domain.dtos.VerifyUserDto;
 import com.proyect.authAndUserModule.user.domain.model.AuthenticationRequest;
 import com.proyect.authAndUserModule.user.domain.model.AuthenticationResponse;
 import com.proyect.authAndUserModule.user.domain.model.Role;
-import com.proyect.authAndUserModule.user.infraestructure.customexceptions.CustomEmailAlreadyExistsException;
-import com.proyect.authAndUserModule.user.infraestructure.customexceptions.CustomInvalidEmailException;
-import com.proyect.authAndUserModule.user.infraestructure.customexceptions.CustomPasswordException;
-import com.proyect.authAndUserModule.user.infraestructure.customexceptions.CustomUserAlreadyExistsException;
+import com.proyect.authAndUserModule.user.infraestructure.customexceptions.*;
 import com.proyect.authAndUserModule.user.domain.model.RegisterRequest;
 import com.proyect.authAndUserModule.user.infraestructure.entities.UserEntity;
 import jakarta.mail.MessagingException;
@@ -75,15 +72,15 @@ public class AuthenticateService {
 
     }
 
-    //Todo handle CUSTOM EXCEPTIONS
     public void verifyUser(VerifyUserDto input) {
         Optional<UserEntity> optionalUser = repository.findByEmail(input.getEmail());
+        System.out.println(optionalUser.isPresent());
         if (optionalUser.isPresent()) {
             UserEntity user = optionalUser.get();
             if(user.isVerified())
-                throw new RuntimeException("Account is already verified.");
+                throw new CustomAccountAlreadyVerifiedException("Account is already verified.");
             if (user.getVerificationCodeExpiresAt().isBefore(LocalDateTime.now())) {
-                throw new RuntimeException("Verification code has expired");
+                throw new CustomVerificationCodeExpiredException("Verification code has expired");
             }
             if (user.getVerificationCode().equals(input.getVerificationCode())) {
                 user.setVerified(true);
@@ -91,10 +88,10 @@ public class AuthenticateService {
                 user.setVerificationCodeExpiresAt(null);
                 repository.save(user);
             } else {
-                throw new RuntimeException("Invalid verification code");
+                throw new CustomInvalidVerificationCodeException("Invalid verification code");
             }
         } else {
-            throw new RuntimeException("User not found");
+            throw new CustomUserNotFoundException("User not found");
         }
     }
     public void resendVerificationCode(String email) {
@@ -102,8 +99,8 @@ public class AuthenticateService {
 
         if (optionalUser.isPresent()) {
             UserEntity user = optionalUser.get();
-            if (user.isVerified() && (user.getVerificationCodeExpiresAt() == null) ) {
-                throw new RuntimeException("Account is already verified or verification code hasn't expired yet.");
+            if (user.isEnabled() && (user.getVerificationCodeExpiresAt() == null) ) {
+                throw new CustomAccountAlreadyVerifiedException("Account is already verified or verification code hasn't expired yet.");
             }
             user.setVerificationCode(generateVerificationCode());
             user.setVerificationCodeExpiresAt(LocalDateTime.now().plusHours(1));
@@ -112,7 +109,7 @@ public class AuthenticateService {
 
 
         } else {
-            throw new RuntimeException("User not found");
+            throw new CustomUserNotFoundException("User not found");
         }
     }
     public AuthenticationResponse authenticateOAuth2(OAuth2User oAuth2User) {
@@ -154,14 +151,14 @@ public class AuthenticateService {
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         Optional<UserEntity> userOptional = repository.findByEmail(request.getEmail());
-
         if (userOptional.isPresent()) {
             UserEntity user = userOptional.get();
+            System.out.println(user.isVerified());
             if (!user.isVerified()) {
-                throw new RuntimeException("Please verify your account before logging in.");
+                throw new CustomVerifyAccountBeforeLogginException("Please verify your account before logging in.");
             }
         } else {
-            throw new RuntimeException("User not found");
+            throw new CustomUserNotFoundException("User not found");
         }
 
         authenticationManager.authenticate(
@@ -181,15 +178,24 @@ public class AuthenticateService {
         String subject = "Account Verification";
         String verificationCode = "VERIFICATION CODE " + user.getVerificationCode();
         String htmlMessage = "<html>"
-                + "<body style=\"font-family: Arial, sans-serif;\">"
-                + "<div style=\"background-color: #f5f5f5; padding: 20px;\">"
+                + "<body style=\"font-family: Arial, sans-serif; background-color: #f9f9f9; margin: 0; padding: 0;\">"
+                + "<table width=\"100%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">"
+                + "<tr><td style=\"padding: 20px;\">"
+                + "<table width=\"600\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\" style=\"border: 1px solid #ddd; background-color: #fff; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.05);\">"
+                + "<tr><td style=\"padding: 20px; text-align: center;\">"
                 + "<h2 style=\"color: #333;\">Welcome to Match!</h2>"
-                + "<p style=\"font-size: 16px;\">Please enter the verification code below to continue:</p>"
-                + "<div style=\"background-color: #fff; padding: 20px; border-radius: 5px; box-shadow: 0 0 10px rgba(0,0,0,0.1);\">"
-                + "<h3 style=\"color: #333;\">Verification Code (Expires in 15 minutes):</h3>"
-                + "<p style=\"font-size: 18px; font-weight: bold; color: #007bff;\">" + verificationCode + "</p>"
+                + "<p style=\"font-size: 16px; color: #555;\">Please enter the verification code below to continue:</p>"
+                + "<div style=\"background-color: #f5f5f5; padding: 20px; margin: 20px auto; width: fit-content; border-radius: 5px;\">"
+                + "<h3 style=\"color: #333; margin: 0;\">Verification Code (Expires in 15 minutes):</h3>"
+                + "<p style=\"font-size: 18px; font-weight: bold; color: #007bff; margin: 10px 0 0;\">" + verificationCode + "</p>"
                 + "</div>"
-                + "</div>"
+                + "</td></tr>"
+                + "<tr><td style=\"padding: 20px; text-align: center; font-size: 14px; color: #777;\">"
+                + "<p>If you did not request this verification, please ignore this email.</p>"
+                + "</td></tr>"
+                + "</table>"
+                + "</td></tr>"
+                + "</table>"
                 + "</body>"
                 + "</html>";
 

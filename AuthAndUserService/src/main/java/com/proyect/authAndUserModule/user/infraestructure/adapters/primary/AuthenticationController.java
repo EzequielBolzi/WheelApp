@@ -1,7 +1,9 @@
 package com.proyect.authAndUserModule.user.infraestructure.adapters.primary;
 
 
+import com.proyect.authAndUserModule.user.application.service.UserService;
 import com.proyect.authAndUserModule.user.domain.dtos.VerifyUserDto;
+import com.proyect.authAndUserModule.user.domain.model.User;
 import com.proyect.authAndUserModule.user.infraestructure.adapters.secondary.AuthenticateService;
 import com.proyect.authAndUserModule.user.infraestructure.adapters.secondary.CustomOAuth2User;
 import com.proyect.authAndUserModule.user.domain.model.AuthenticationRequest;
@@ -13,6 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -20,7 +24,6 @@ import org.springframework.web.bind.annotation.*;
 public class AuthenticationController {
     @Autowired
     private final AuthenticateService authService;
-
 
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(
@@ -52,14 +55,13 @@ public class AuthenticationController {
     @PostMapping("/resend")
     public ResponseEntity<?> resendVerificationCode(@RequestParam String email) {
         try {
-            authService.resendVerificationCode(email);
-            return ResponseEntity.ok("Verification code sent");
+                authService.resendVerificationCode(email);
+                return ResponseEntity.ok("Verification code sent");
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-    //Todo: UPDATE USER
 
 
 }
