@@ -38,7 +38,7 @@ public class DriverInfoEntity {
     @Column(name = "headshot")
     private String headshot;
 
-    @OneToMany(mappedBy = "driverInfo", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "driverInfo", cascade = CascadeType.ALL)
     private List<VehicleEntity> vehicles;
 
     @Embedded

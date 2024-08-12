@@ -1,6 +1,7 @@
 package com.contentFormula.content.f1racereport.domain.model;
 
 import com.contentFormula.content.f1driverinfo.domain.model.DriverInfo;
+import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,6 +14,7 @@ import java.util.List;
 @Data
 public class F1RaceReport {
     private Long id;
+    private String raceEventId;
     private String raceName;
     private String shortName;
     private ZonedDateTime startDate;

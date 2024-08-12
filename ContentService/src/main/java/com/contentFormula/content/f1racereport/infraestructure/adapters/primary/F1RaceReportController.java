@@ -20,9 +20,9 @@ public class F1RaceReportController {
     private final F1RaceReportAdapter f1RaceReportAdapter;
 
 
-    @GetMapping("/fetch-and-save/{eventId}")
-    public ResponseEntity<Void> fetchAndSaveNewsInfo(@PathVariable String eventId) {
-        f1RaceReportAdapter.fetchAndSave(eventId);
+    @GetMapping("/fetch-and-save")
+    public ResponseEntity<Void> fetchAndSaveNewsInfo() {
+        f1RaceReportAdapter.fetchAndSave();
         return ResponseEntity.ok().build();
     }
 

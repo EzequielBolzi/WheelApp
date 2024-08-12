@@ -11,4 +11,9 @@ public interface DriverInfoUseCase {
     List<DriverInfo> getAllDrivers();
     Optional<DriverInfo> getDriverByName(String driverName);
     List<DriverInfo> getDriversPerTeam(String team);
+    List<Long> getAllDriverIds();
+    void updateDriverInfoInDB(Long driverId, DriverInfo driverInfo);
+
+
 }
+

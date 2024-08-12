@@ -25,7 +25,7 @@ public class F1NewsUseCaseImpl implements F1NewsUseCase {
     }
 
     @Override
-    public Optional<List<F1News>> getAllNews() {
+    public List<F1News> getAllNews() {
         return f1NewsRepositoryPort.getAllNews();
     }
 }

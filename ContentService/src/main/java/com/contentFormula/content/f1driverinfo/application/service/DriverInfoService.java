@@ -38,5 +38,15 @@ public class DriverInfoService  implements DriverInfoUseCase {
         return driverInfoUseCase.getDriversPerTeam(team);
     }
 
+    @Override
+    public List<Long> getAllDriverIds() {
+        return driverInfoUseCase.getAllDriverIds();
+    }
+
+    @Override
+    public void updateDriverInfoInDB(Long driverId, DriverInfo driverInfo) {
+        driverInfoUseCase.updateDriverInfoInDB(driverId,driverInfo);
+    }
+
 
 }

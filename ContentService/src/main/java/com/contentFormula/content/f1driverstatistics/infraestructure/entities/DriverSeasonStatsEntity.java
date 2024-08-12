@@ -51,7 +51,7 @@ public class DriverSeasonStatsEntity{
 
     //The id is not the one given by the API. It is the one from my database.
     @ManyToOne()
-    @JoinColumn(name = "driver_info_id", referencedColumnName = "driver_identifier")
+    @JoinColumn(name = "driver_info_identifier", referencedColumnName = "driver_identifier")
     private DriverInfoEntity driverInfo;
 
 }

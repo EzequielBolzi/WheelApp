@@ -1,6 +1,10 @@
 package com.contentFormula.content.f1news.infraestructure.adapters.secondary;
 
 
+import com.contentFormula.content.f1driverinfo.domain.dtos.DriverInfoDto;
+import com.contentFormula.content.f1driverinfo.domain.model.DriverInfo;
+import com.contentFormula.content.f1driverinfo.infraestructure.adapters.secondary.DriverInfoMapper;
+import com.contentFormula.content.f1news.domain.dtos.F1NewsDto;
 import com.contentFormula.content.f1news.domain.model.F1News;
 import com.contentFormula.content.f1news.infraestructure.entities.F1NewsEntity;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -76,7 +80,22 @@ public class F1NewsMapper {
                 domain.getUrl()
         );
     }
+    public static F1NewsDto toDto(F1News domain) {
+        if (domain == null) return null;
 
+        List<F1NewsDto.ImageInfoDto> imageDtos = domain.getImages().stream()
+                .map(image -> new F1NewsDto.ImageInfoDto(image.getCredit(), image.getUrl()))
+                .collect(Collectors.toList());
+
+        return new F1NewsDto(
+                domain.getHeadline(),
+                domain.getNewsBody(),
+                imageDtos
+        );
+    }
+    public static List<F1NewsDto> toDto(List<F1News> domains) {
+        return domains.stream().map(F1NewsMapper::toDto).collect(Collectors.toList());
+    }
     public static List<F1News> fromJson(String jsonString) throws Exception {
         JsonNode root = objectMapper.readTree(jsonString);
         List<F1News> newsList = new ArrayList<>();

@@ -9,6 +9,6 @@ public interface DriverSeasonStatsRepositoryPort {
 /*
     List<DriverSeasonStats> findResultsByFullName(String fullName);
 */
-    Optional<DriverSeasonStats> findByYearAndDriverInfo_Id(Integer year, Long driverInfoId);
+    Optional<DriverSeasonStats> getByYearAndDriverInfo_Id(Integer year, Long driverInfoId);
 
 }

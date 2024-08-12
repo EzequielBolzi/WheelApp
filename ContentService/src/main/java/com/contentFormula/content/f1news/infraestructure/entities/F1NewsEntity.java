@@ -38,7 +38,7 @@ public class F1NewsEntity {
     private List<ImageInfoEntity> images;
 
     @Entity
-    @Table(name = "image_info")
+    @Table(name = "f1_news_image_info")
     @AllArgsConstructor
     @NoArgsConstructor
     @Data

@@ -23,7 +23,17 @@ public class DriverRaceResultAdapter {
     private final HttpClient httpClient;
     private final JpaDriverInfoRepository jpaDriverInfoRepository;
 
-    public void fetchAndSaveDriverRaceResults(Long driverId) {
+    public void fetchAndSaveAllDriverRaceResults() {
+        // Fetch all driver IDs
+        List<Long> driverIds = jpaDriverInfoRepository.findAllDriverIds();
+
+        // Iterate over each driver ID
+        for (Long driverId : driverIds) {
+            fetchAndSaveDriverRaceResults(driverId);
+        }
+    }
+
+    private void fetchAndSaveDriverRaceResults(Long driverId) {
         Optional<DriverInfoEntity> driverInfoOptional = jpaDriverInfoRepository.findById(driverId);
         if (driverInfoOptional.isEmpty()) {
             throw new RuntimeException("Driver not found");

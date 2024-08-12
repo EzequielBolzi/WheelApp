@@ -36,10 +36,10 @@ public class JpaF1NewsAdapter implements F1NewsRepositoryPort{
 
 
     @Override
-    public Optional<List<F1News>> getAllNews() {
+    public List<F1News> getAllNews() {
         List<F1NewsEntity> allNews = jpaF1NewsRepository.findAll();
-        return Optional.of(allNews.stream()
+        return allNews.stream()
                 .map(F1NewsMapper::toDomain)
-                .collect(Collectors.toList()));
+                .collect(Collectors.toList());
     }
 }

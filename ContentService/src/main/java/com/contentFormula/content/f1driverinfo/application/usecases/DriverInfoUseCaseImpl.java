@@ -17,7 +17,7 @@ public class DriverInfoUseCaseImpl implements DriverInfoUseCase {
 
     @Override
     public Optional<DriverInfo> createDriverInfo(DriverInfo driverInfo) {
-        return driverInfoRepositoryPort.saveDriverInfoInDB(driverInfo);
+        return driverInfoRepositoryPort.saveDriverInfo(driverInfo);
     }
 
     @Override
@@ -32,11 +32,21 @@ public class DriverInfoUseCaseImpl implements DriverInfoUseCase {
 
     @Override
     public Optional<DriverInfo> getDriverByName(String driverName) {
-        return driverInfoRepositoryPort.findByName(driverName);
+        return driverInfoRepositoryPort.getByName(driverName);
     }
 
     @Override
     public List<DriverInfo> getDriversPerTeam(String team) {
         return driverInfoRepositoryPort.getDriversByTeam(team);
+    }
+
+    @Override
+    public List<Long> getAllDriverIds() {
+        return driverInfoRepositoryPort.getAllDriverIds();
+    }
+
+    @Override
+    public void updateDriverInfoInDB(Long driverId, DriverInfo driverInfo) {
+        driverInfoRepositoryPort.updateDriverInfo(driverId,driverInfo);
     }
 }

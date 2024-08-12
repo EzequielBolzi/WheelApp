@@ -28,7 +28,7 @@ public class JpaDriverSeasonStatsRepositoryAdapter implements DriverSeasonStatsR
     }
 
     @Override
-    public Optional<DriverSeasonStats> findByYearAndDriverInfo_Id(Integer year, Long driverIdentifier) {
+    public Optional<DriverSeasonStats> getByYearAndDriverInfo_Id(Integer year, Long driverIdentifier) {
         return jpaDriverSeasonStatsRepository.findByYearAndDriverInfo_DriverIdentifier(year, driverIdentifier).map(DriverSeasonStatsMapper::toDomain);
     }
 }

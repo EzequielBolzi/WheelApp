@@ -5,12 +5,16 @@ import com.contentFormula.content.f1driverinfo.domain.model.DriverInfo;
 import com.contentFormula.content.f1driverinfo.domain.model.Vehicle;
 import com.contentFormula.content.f1driverinfo.infraestructure.entities.DriverInfoEntity;
 import com.contentFormula.content.f1driverinfo.infraestructure.entities.VehicleEntity;
+import com.contentFormula.content.f1racereport.infraestructure.adapters.secondary.F1RaceReportAdapter;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -19,6 +23,7 @@ import java.util.stream.Collectors;
 public class DriverInfoMapper {
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
+    private static final Logger logger = LoggerFactory.getLogger(DriverInfoMapper.class);
 
     /**
      * Converts a DriverInfoEntity to a DriverInfo domain model.
@@ -153,6 +158,7 @@ public class DriverInfoMapper {
             List<Vehicle> vehicles = new ArrayList<>();
             for (JsonNode vehicleNode : vehiclesNode) {
                 Vehicle vehicle = new Vehicle();
+                vehicle.setNumber(getTextSafely(vehicleNode, "number"));
                 vehicle.setManufacturer(getTextSafely(vehicleNode, "manufacturer"));
                 vehicle.setChassis(getTextSafely(vehicleNode, "chassis"));
                 vehicle.setEngine(getTextSafely(vehicleNode, "engine"));
@@ -208,8 +214,17 @@ public class DriverInfoMapper {
     }
 
     private static ZonedDateTime getDateTimeSafely(JsonNode node, String fieldName) {
-        String dateTimeString = getTextSafely(node, fieldName);
-        return dateTimeString != null ? ZonedDateTime.parse(dateTimeString) : null;
+        JsonNode fieldNode = node.get(fieldName);
+        if (fieldNode == null || fieldNode.isNull() || fieldNode.asText().isEmpty()) {
+            return null; // or return a default value, or throw an exception
+        }
+        try {
+            return ZonedDateTime.parse(fieldNode.asText());
+        } catch (DateTimeParseException e) {
+            // log the error
+            logger.error("Error parsing date-time value: {}", e.getMessage());
+            return null; // or return a default value, or throw an exception
+        }
     }
 
     private static List<String> getListSafely(JsonNode node, String fieldName) {

@@ -8,5 +8,5 @@ import java.util.Optional;
 public interface F1NewsRepositoryPort {
     Optional<F1News> save(F1News f1News);
     Optional<List<F1News>> getNewsFromADriver(String driverName);
-    Optional<List<F1News>> getAllNews( );
+    List<F1News> getAllNews( );
 }

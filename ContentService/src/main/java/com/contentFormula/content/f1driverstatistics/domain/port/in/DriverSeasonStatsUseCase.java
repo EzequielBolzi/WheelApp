@@ -7,7 +7,7 @@ import java.util.Optional;
 public interface DriverSeasonStatsUseCase {
     Optional<DriverSeasonStats> createDriverSeasonStats (DriverSeasonStats driverSeasonStats);
 
-    Optional<DriverSeasonStats> findByYearAndDriverInfo_Id(Integer year, Long driverInfoId);
+    Optional<DriverSeasonStats> getByYearAndDriverInfo_Id(Integer year, Long driverInfoId);
 
 }
 

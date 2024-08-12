@@ -22,18 +22,25 @@ public class DriverSeasonStatsAdapter {
     private final HttpClient httpClient;
     private final JpaDriverInfoRepository jpaDriverInfoRepository;
 
-    public void fetchAndSaveDriverSeasonStats(Long driverId) {
-        Optional<DriverInfoEntity> driverInfoOptional = jpaDriverInfoRepository.findById(driverId);
-        if (driverInfoOptional.isEmpty()) {
-            throw new RuntimeException("Driver not found");
+    public void fetchAndSaveAllDriverSeasoStats() {
+        // Fetch all driver IDs
+        List<Long> driverIds = jpaDriverInfoRepository.findAllDriverIds();
+
+        // Iterate over each driver ID
+        for (Long driverId : driverIds) {
+            fetchAndSaveDriverSeasonStats(driverId);
         }
+    }
+
+    private void fetchAndSaveDriverSeasonStats(Long driverId) {
+        Optional<DriverInfoEntity> driverInfoOptional = jpaDriverInfoRepository.findById(driverId);
         DriverInfo driverInfo = DriverInfoMapper.toDomain(driverInfoOptional.get());
         Optional<List<DriverSeasonStats>> statsOptional = fetchDriverSeasonStats(driverId);
         if (statsOptional.isPresent()) {
             List<DriverSeasonStats> stats = statsOptional.get();
             for (DriverSeasonStats stat : stats) {
                 // Check if the stat already exists in the database
-                Optional<DriverSeasonStats> existingStat = jpaDriverSeasonStatsRepositoryAdapter.findByYearAndDriverInfo_Id(stat.getYear(), driverInfo.getId());
+                Optional<DriverSeasonStats> existingStat = jpaDriverSeasonStatsRepositoryAdapter.getByYearAndDriverInfo_Id(stat.getYear(), driverInfo.getId());
                 if (existingStat.isEmpty()) {
                     // Only add the stat if it doesn't exist
                     stat.setDriverInfo(driverInfo);

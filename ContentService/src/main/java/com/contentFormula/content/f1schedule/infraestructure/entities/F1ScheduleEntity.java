@@ -41,5 +41,8 @@ public class F1ScheduleEntity {
     @Column(name = "winner")
     private String winner;
 
+    @Column(name = "race_event_id")
+    private String raceId;
+
 
 }

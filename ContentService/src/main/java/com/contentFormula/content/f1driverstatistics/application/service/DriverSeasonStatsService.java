@@ -19,8 +19,8 @@ public class DriverSeasonStatsService implements DriverSeasonStatsUseCase {
 
 
     @Override
-    public Optional<DriverSeasonStats> findByYearAndDriverInfo_Id(Integer year, Long driverInfoId) {
-        return driverSeasonStatsUseCase.findByYearAndDriverInfo_Id(year,driverInfoId);
+    public Optional<DriverSeasonStats> getByYearAndDriverInfo_Id(Integer year, Long driverInfoId) {
+        return driverSeasonStatsUseCase.getByYearAndDriverInfo_Id(year,driverInfoId);
     }
 
 

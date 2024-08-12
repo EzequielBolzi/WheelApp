@@ -24,6 +24,7 @@ public class F1ScheduleMapper {
         }
 
         F1Schedule domain = new F1Schedule();
+        domain.setId(entity.getId());
         domain.setStartDate(entity.getStartDate());
         domain.setEndDate(entity.getEndDate());
         domain.setCompleted(entity.isCompleted());
@@ -31,6 +32,7 @@ public class F1ScheduleMapper {
         domain.setCircuit(entity.getCircuit());
         domain.setPostponedOrCanceled(entity.isPostponedOrCanceled());
         domain.setWinner(entity.getWinner());
+        domain.setRaceId(entity.getRaceId());
 
         return domain;
     }
@@ -41,6 +43,7 @@ public class F1ScheduleMapper {
         }
 
         F1ScheduleEntity entity = new F1ScheduleEntity();
+        entity.setId(domain.getId());
         entity.setStartDate(domain.getStartDate());
         entity.setEndDate(domain.getEndDate());
         entity.setCompleted(domain.isCompleted());
@@ -48,6 +51,7 @@ public class F1ScheduleMapper {
         entity.setCircuit(domain.getCircuit());
         entity.setPostponedOrCanceled(domain.isPostponedOrCanceled());
         entity.setWinner(domain.getWinner());
+        entity.setRaceId(domain.getRaceId());
 
         return entity;
     }
@@ -85,10 +89,20 @@ public class F1ScheduleMapper {
                 schedule.setCircuit(raceNode.path("crct").asText());
                 schedule.setPostponedOrCanceled(raceNode.path("isPostponedOrCanceled").asBoolean());
                 schedule.setWinner(raceNode.path("winner").asText());
+                // Extract only the numeric part from the evLink field
+                String evLink = raceNode.path("evLink").asText();
+                String raceId = extractRaceId(evLink);
+                schedule.setRaceId(raceId);
                 schedules.add(schedule);
             }
         }
         return schedules;
+    }
+
+    private static String extractRaceId(String evLink) {
+        // Split the string by '/' and get the last part
+        String[] parts = evLink.split("/");
+        return parts[parts.length - 1];
     }
 
     private static ZonedDateTime parseDate(String dateString) {

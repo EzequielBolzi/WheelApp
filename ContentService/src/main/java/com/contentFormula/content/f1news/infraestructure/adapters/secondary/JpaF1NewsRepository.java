@@ -17,4 +17,5 @@ public interface JpaF1NewsRepository extends JpaRepository<F1NewsEntity,Long> {
             "OR n.link LIKE %:driverName% ")
     Optional<List<F1NewsEntity>> findNewsByName(@Param("driverName") String driverName);
     Optional<F1NewsEntity> findByDataSourceIdentifier(String dataSourceIdentifier);
+
 }

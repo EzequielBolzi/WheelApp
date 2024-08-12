@@ -18,13 +18,13 @@ public class DriverRaceResultService implements DriverRaceResultUseCase {
     }
 
     @Override
-    public List<DriverRaceResult> findResultsByFullName(String fullName) {
-        return driverRaceResultUseCase.findResultsByFullName(fullName);
+    public List<DriverRaceResult> getResultsByFullName(String fullName) {
+        return driverRaceResultUseCase.getResultsByFullName(fullName);
     }
 
     @Override
-    public Optional<DriverRaceResult> findByRaceIdAndDriverInfoId(String raceName, Long driverId) {
-        return driverRaceResultUseCase.findByRaceIdAndDriverInfoId(raceName,driverId);
+    public Optional<DriverRaceResult> getByRaceIdAndDriverInfoId(String raceName, Long driverId) {
+        return driverRaceResultUseCase.getByRaceIdAndDriverInfoId(raceName,driverId);
     }
 
 

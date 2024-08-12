@@ -6,9 +6,12 @@ import java.util.List;
 import java.util.Optional;
 
 public interface DriverInfoRepositoryPort {
-    Optional<DriverInfo> saveDriverInfoInDB(DriverInfo driverInfo);
+    Optional<DriverInfo> saveDriverInfo(DriverInfo driverInfo);
     List<DriverInfo> getAllDrivers();
     Optional<DriverInfo> getDriverInfo(Long driverId);
     List<DriverInfo> getDriversByTeam(String team);
-    Optional<DriverInfo> findByName(String driverName);
+    Optional<DriverInfo> getByName(String driverName);
+    List<Long> getAllDriverIds();
+    void updateDriverInfo(Long driverId, DriverInfo driverInfo);
+
 }

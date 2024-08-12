@@ -26,9 +26,9 @@ public class DriverInfoController {
 
 
     // Fetch information from external API to my DB
-    @GetMapping("/fetch-and-save/{driverId}")
-    public ResponseEntity<Void> fetchAndSaveDriverInfo(@PathVariable Long driverId) {
-        driverInfoServiceClient.fetchAndSaveDriverInfo(driverId);
+    @GetMapping("/fetch-and-save")
+    public ResponseEntity<Void> fetchAndSaveDriverInfo() {
+        driverInfoServiceClient.fetchAndSaveDriverInfo();
         return ResponseEntity.ok().build();
     }
 

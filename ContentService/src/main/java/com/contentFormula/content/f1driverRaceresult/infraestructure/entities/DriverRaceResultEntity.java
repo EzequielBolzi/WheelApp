@@ -29,7 +29,7 @@ public class DriverRaceResultEntity {
     private Integer points;
 
     @ManyToOne()
-    @JoinColumn(name = "driver_info_id")
+    @JoinColumn(name = "driver_info_identifier")
     private DriverInfoEntity driverInfo;
 
 }

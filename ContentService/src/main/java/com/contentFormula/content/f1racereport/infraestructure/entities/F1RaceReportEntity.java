@@ -19,6 +19,9 @@ public class F1RaceReportEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "race_event_id")
+    private String raceEventId;
+
     @Column(name = "race_name")
     private String raceName;
 

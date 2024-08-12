@@ -9,6 +9,6 @@ import java.util.Optional;
 public interface F1NewsUseCase {
     Optional<F1News> createF1News (F1News f1News);
     Optional<List<F1News>> getNewsFromADriver(String driverName);
-    Optional<List<F1News>> getAllNews( );
+    List<F1News> getAllNews( );
 
 }

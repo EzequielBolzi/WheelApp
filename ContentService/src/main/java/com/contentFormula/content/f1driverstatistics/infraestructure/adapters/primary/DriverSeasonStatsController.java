@@ -30,15 +30,15 @@ public class DriverSeasonStatsController {
     private final DriverInfoService driverInfoService;
 
     // Fetch information from external API to my DB
-    @GetMapping("/fetch-and-save/{driverId}")
-    public ResponseEntity<Void> fetchAndSaveStatsInfo(@PathVariable Long driverId) {
-        driverSeasonStatsAdapter.fetchAndSaveDriverSeasonStats(driverId);
+    @GetMapping("/fetch-and-save")
+    public ResponseEntity<Void> fetchAndSaveStatsInfo() {
+        driverSeasonStatsAdapter.fetchAndSaveAllDriverSeasoStats();
         return ResponseEntity.ok().build();
     }
     // Get all information wit.
-    @GetMapping("/{year}/{driverId}")
+    @GetMapping("/stats/{year}/{driverId}")
     public ResponseEntity<DriverSeasonStatsDto> getStatsByYearAndDriver(@PathVariable Integer year, @PathVariable Long driverId) {
-        Optional<DriverSeasonStats> byYearAndDriverInfoId = driverSeasonStatsService.findByYearAndDriverInfo_Id(year, driverInfoService.getDriverInfo(driverId).get().getId());
+        Optional<DriverSeasonStats> byYearAndDriverInfoId = driverSeasonStatsService.getByYearAndDriverInfo_Id(year, driverInfoService.getDriverInfo(driverId).get().getId());
         if (byYearAndDriverInfoId.isPresent()) {
             return ResponseEntity.ok(DriverSeasonStatsMapper.toDto(byYearAndDriverInfoId.get()));
         } else {

@@ -25,6 +25,7 @@ public class F1RaceReportMapper {
 
         F1RaceReport domain = new F1RaceReport();
         domain.setId(entity.getId());
+        domain.setRaceEventId(entity.getRaceEventId());
         domain.setRaceName(entity.getRaceName());
         domain.setShortName(entity.getShortName());
         domain.setStartDate(entity.getStartDate());
@@ -140,6 +141,7 @@ public class F1RaceReportMapper {
 
         F1RaceReportEntity entity = new F1RaceReportEntity();
         entity.setId(domain.getId());
+        entity.setRaceEventId(domain.getRaceEventId());
         entity.setRaceName(domain.getRaceName());
         entity.setShortName(domain.getShortName());
         entity.setStartDate(domain.getStartDate());

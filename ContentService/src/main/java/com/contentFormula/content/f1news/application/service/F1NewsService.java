@@ -23,7 +23,7 @@ public class F1NewsService implements F1NewsUseCase {
     }
 
     @Override
-    public Optional<List<F1News>> getAllNews() {
+    public List<F1News> getAllNews() {
         return f1NewsUseCase.getAllNews();
     }
 }

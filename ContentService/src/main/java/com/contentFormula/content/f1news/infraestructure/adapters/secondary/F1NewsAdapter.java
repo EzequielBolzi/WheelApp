@@ -70,7 +70,7 @@ public class F1NewsAdapter {
         try {
             // The info its extracted from ESPN
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create("https://f1-motorsport-data.p.rapidapi.com/news?limit=50"))
+                    .uri(URI.create("https://f1-motorsport-data.p.rapidapi.com/news?limit=100"))
                     .header("x-rapidapi-key", apiKey)
                     .header("x-rapidapi-host", "f1-motorsport-data.p.rapidapi.com")
                     .method("GET", HttpRequest.BodyPublishers.noBody())

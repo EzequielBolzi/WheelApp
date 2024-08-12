@@ -18,5 +18,6 @@ public class F1Schedule {
     private String circuit;
     private boolean isPostponedOrCanceled;
     private String winner;
+    private String raceId;
 
 }
